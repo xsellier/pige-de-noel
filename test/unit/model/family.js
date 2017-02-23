@@ -2,6 +2,7 @@
 
 const expect = require('chai').expect
 const path = require('path')
+const config = require('config')
 
 const familyModel = require('../../../lib/model/family')
 
@@ -57,6 +58,24 @@ describe(`${path.relative(process.cwd(), __filename)} experiment`, () => {
 
     expect(addedSpouse.member).to.be.equal(spouse)
     expect(addedSpouse.spouse).to.not.exist
+
+    done()
+  })
+
+  it(`Throw an exception if we add more than ${config.draw.maxMembers} members`, (done) => {
+    const memberPrefix = 'Robert Redford'
+
+    for (let index = 0; index <= config.draw.maxMembers; ++index) {
+      familyModel.addMember(`${memberPrefix} ${index}`)
+    }
+
+    expect(familyModel.addMember.bind(familyModel, memberPrefix)).to.throw(Error)
+
+    done()
+  })
+
+  it(`Throw an exception if we add a member without name`, (done) => {
+    expect(familyModel.addMember).to.throw(Error)
 
     done()
   })

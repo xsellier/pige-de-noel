@@ -3,5 +3,9 @@
     "port": 8000,
     "public": "./public",
     "apiPrefix": "api"
+  },
+  "draw": {
+    "minMembers": 4,
+    "maxMembers": 50
   }
 }

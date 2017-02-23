@@ -1,4 +1,4 @@
-# Pige de noël
+# Pige de noël [![Build Status](https://travis-ci.com/xsellier/pige-de-noel.svg?token=brwsx1qJJQbFtxcxsvCp&branch=master)](https://travis-ci.com/xsellier/pige-de-noel)
 
 ## Prerequisite
 
