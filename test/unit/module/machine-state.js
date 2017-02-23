@@ -39,12 +39,14 @@ describe(`${path.relative(process.cwd(), __filename)} during 'CLOSE' state`, () 
     const members = ['Robert Redford', 'Dwayne Johnson', 'Natalie Portman', 'Daniel Radcliffe', 'Emma Watson']
 
     machineStateModule.reset()
-    members.forEach(machineStateModule.state.addMember)
+
+    // Cannot bind the function, because 'state' attribute is dynamic
+    members.forEach((member) => machineStateModule.state.addMember(member))
     machineStateModule.state.start()
   })
 
   it('Should be able to get a match if a draw has been started', (done) => {
-    expect(machineStateModule.state.getMatch).to.exist
+    expect(machineStateModule.state.get).to.exist
 
     done()
   })

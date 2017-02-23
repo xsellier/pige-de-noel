@@ -4,7 +4,8 @@ const expect = require('chai').expect
 const path = require('path')
 const config = require('config')
 
-const familyModel = require('../../../lib/model/family')
+const FamilyModel = require('../../../lib/model/family')
+const familyModel = new FamilyModel()
 
 describe(`${path.relative(process.cwd(), __filename)} experiment`, () => {
   beforeEach(() => {
