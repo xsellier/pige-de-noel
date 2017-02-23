@@ -1,0 +1,40 @@
+{
+  "name": "pige-de-noel",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "description": "Pige de noel a la famille Brault",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "config": "^1.25.1",
+    "express": "^4.14.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "standard": "^8.6.0"
+  },
+  "scripts": {
+    "lint": "standard lib/**/*.js",
+    "test": "mocha test/**/*.js",
+    "test-unit": "mocha test/unit/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xsellier/pige-de-noel.git"
+  },
+  "keywords": [
+    "pige",
+    "de",
+    "noel",
+    "brault"
+  ],
+  "author": "Xavier Sellier <xsellier@gmail.com>",
+  "license": "UNLICENCED",
+  "bugs": {
+    "url": "https://github.com/xsellier/pige-de-noel/issues"
+  },
+  "homepage": "https://github.com/xsellier/pige-de-noel#readme",
+  "directories": {
+    "test": "test"
+  }
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Context Menu</title>
+  <script>
+    const single = "Add a member of the family"
+    const couple = "Add a couple"
+    let members = []
+
+    function getElementById(id) {
+      return document.getElementById(id)
+    }
+
+    function reset() {
+      getElementById('newMember1').disabled = false
+      getElementById('newMember2').disabled = false
+      updateName()
+    }
+
+    function getNewMembers() {
+      let newMember1 = getElementById('newMember1').value
+      let newMember2 = getElementById('newMember2').value
+
+      return [newMember1, newMember2].filter((member) => /[a-zA-Z][a-zA-Z\'\ ]*/.test(member))
+    }
+
+    function updateName() {
+      let newMembers = getNewMembers()
+      let validateButton = getElementById('validate')
+      let startButton = getElementById('start')
+
+      if (newMembers.length > 1) {
+        validateButton.value = couple
+      } else {
+        validateButton.value = single
+      }
+
+      validateButton.disabled = (newMembers.length < 1)
+
+      // Validate that we have at least 2 members
+      startButton.disabled = (members.length < 2)
+    }
+
+    function validate() {
+      let newMembers = getNewMembers()
+
+      // Since a member cannot draw his/her spouse we push a couple as a single member
+      members.push(newMembers)
+
+      getElementById('newMember1').value = null
+      getElementById('newMember2').value = null
+      updateName()
+
+      // TODO: Plugin to the backend
+      getElementById('list').innerHTML += `${newMembers.join(' - ')}<br />`
+    }
+
+    function start() {
+      getElementById('newMember1').disabled = true
+      getElementById('newMember2').disabled = true
+      getElementById('start').disabled = true
+    }
+  </script>
+</head>
+<body onload="javascript: reset()">
+<h1>Christmas gift exchange</h1>
+<div id="list"></div>
+<div id="addNewMemberForm">
+  <input id="newMember1" type="text" value="" oninput="javascript: updateName()" />
+  -
+  <input id="newMember2"  type="text" value="" oninput="javascript: updateName()" />
+  <input id="validate" type="button" value="Add a member of the family" onclick="javascript: validate()" disabled />
+</div>
+<div id="startForm">
+  <input id="start" type="button" value="Start automated draw" onclick="javascript: start()" disabled />
+</div>
+</body>
+</html>
