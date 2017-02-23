@@ -36,12 +36,13 @@ describe(`${path.relative(process.cwd(), __filename)} during 'OPEN' state`, () =
 
 describe(`${path.relative(process.cwd(), __filename)} during 'CLOSE' state`, () => {
   before(() => {
-    const members = ['Robert Redford', 'Dwayne Johnson', 'Natalie Portman', 'Daniel Radcliffe', 'Emma Watson']
+    const members = ['Robert Redford', 'Dwayne Johnson', 'Daniel Radcliffe', 'Emma Watson', 'Lara Fabian', "Jean-pierre Papin"]
 
     machineStateModule.reset()
 
     // Cannot bind the function, because 'state' attribute is dynamic
     members.forEach((member) => machineStateModule.state.addMember(member))
+    machineStateModule.state.addCouple('Natalie Portman', 'Benjamin Millepied')
     machineStateModule.state.start()
   })
 
