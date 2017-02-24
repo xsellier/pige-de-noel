@@ -15,6 +15,16 @@
     let members = []
     let config = {}
 
+    function guid() {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+      }
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+    }
+
     function initialize() {
       $('#postMembers').prop('disabled', true)
       $('#start').prop('disabled', true)
@@ -69,17 +79,21 @@
       }
     }
 
-    function getMatch(member) {
+    function getMatch(member, uniqueId) {
       $.get(`/api/match/${member}`, (data) => {
-        $(`#${member}-button`).prop('disabled', true)
-        $(`#${member}`).append(`- ${data.match}`)
+        $(`#${uniqueId}-button`).prop('disabled', true)
+        $(`#${uniqueId}`).append(`- ${data.match}`)
       })
     }
 
+    console.log($.md5('test'))
+
     function addMember(member) {
+      const uniqueId = guid()
+
       $('#list').append(`
-        <li class="list-group-item" id="${member}">
-          <input class="close-state" id="${member}-button" type="button" value="${member}" onclick="javascript: getMatch('${member}')" disabled />
+        <li class="list-group-item" id="${uniqueId}">
+          <input class="close-state" id="${uniqueId}-button" type="button" value="${member}" onclick="javascript: getMatch('${member}', '${uniqueId}')" disabled />
         </li>
       `)
 
