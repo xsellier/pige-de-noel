@@ -124,6 +124,7 @@
               couple: newMembers
             }),
             contentType: 'application/json',
+            error: sync,
             success: () => {
               addMember(newMembers[0])
               addMember(newMembers[1])
@@ -141,6 +142,7 @@
               member: newMembers[0]
             }),
             contentType: 'application/json',
+            error: sync,
             success: () => {
               addMember(newMembers[0])
 
