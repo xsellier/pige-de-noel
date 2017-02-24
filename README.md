@@ -9,8 +9,6 @@
 Extract the attached archive named `pige-de-noel.zip`, then open a terminal.
 
 ```shell
-cd pige-de-noel
-
 npm install --production
 node .
 ```
@@ -26,8 +24,6 @@ To allow more than 50 users, edit the file `config/default.json` and replace the
 Extract the attached archive named `pige-de-noel.zip`, then open a terminal.
 
 ```shell
-cd pige-de-noel
-
 npm install 
 npm test
 npm run lint
