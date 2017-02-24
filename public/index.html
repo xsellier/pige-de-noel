@@ -2,77 +2,178 @@
 <html>
 <head>
   <title>Context Menu</title>
+  <script src="js/jquery-3.1.1.min.js"></script> 
+  <script src="js/bootstrap.min.js"></script> 
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/bootstrap-theme.min.css">
   <script>
     const single = "Add a member of the family"
     const couple = "Add a couple"
-    let members = []
 
-    function getElementById(id) {
-      return document.getElementById(id)
+    let state = 'OPEN'
+    let members = []
+    let config = {}
+
+    function initialize() {
+      $('#postMembers').prop('disabled', true)
+      $('#start').prop('disabled', true)
+
+      sync()
     }
 
-    function reset() {
-      getElementById('newMember1').disabled = false
-      getElementById('newMember2').disabled = false
-      updateName()
+    function sync() {
+      members = []
+      $('#list').empty()
+
+      $.get('/api/config', (remoteConfig) => {
+        config = remoteConfig
+
+        $.get('/api/state', (remoteState) => {
+          state = remoteState.state
+
+          $.get('/api/member/list', (remoteMembers) => {
+            Object.keys(remoteMembers.members).forEach(addMember)
+
+            refresh()
+          })
+        })
+      })
+    }
+
+    function refresh() {
+      let newMembers = getNewMembers()
+      let postMemberButton = $('#postMembers')
+      let startButton = $('#start')
+
+      if (newMembers.length > 1) {
+        postMemberButton.val(couple)
+      } else {
+        postMemberButton.val(single)
+      }
+
+      postMemberButton.prop('disabled', (newMembers.length < 1 || members.length > parseInt(config.maxMembers)))
+      startButton.prop('disabled', members.length < parseInt(config.minMembers))
+
+      switch(state.toLowerCase()) {
+        case 'close':
+          $('.close-state').prop('disabled', false)
+          $('.open-state').hide()
+          break
+
+        case 'open':
+        default:
+          $('.close-state').prop('disabled', true)
+          $('.open-state').show()
+          break
+      }
+    }
+
+    function getMatch(member) {
+      $.get(`/api/match/${member}`, (data) => {
+        $(`#${member}-button`).prop('disabled', true)
+        $(`#${member}`).append(`- ${data.match}`)
+      })
+    }
+
+    function addMember(member) {
+      $('#list').append(`
+        <li class="list-group-item" id="${member}">
+          <input class="close-state" id="${member}-button" type="button" value="${member}" onclick="javascript: getMatch('${member}')" disabled />
+        </li>
+      `)
+
+      members.push(member)
     }
 
     function getNewMembers() {
-      let newMember1 = getElementById('newMember1').value
-      let newMember2 = getElementById('newMember2').value
+      let newMember1 = $('#newMember1').val()
+      let newMember2 = $('#newMember2').val()
 
       return [newMember1, newMember2].filter((member) => /[a-zA-Z][a-zA-Z\'\ ]*/.test(member))
     }
 
-    function updateName() {
+    function postMembers() {
       let newMembers = getNewMembers()
-      let validateButton = getElementById('validate')
-      let startButton = getElementById('start')
 
-      if (newMembers.length > 1) {
-        validateButton.value = couple
-      } else {
-        validateButton.value = single
+      $('#newMember1').val(null)
+      $('#newMember2').val(null)
+
+      refresh()
+
+      switch (newMembers.length) {
+        case 2:
+          $.ajax({
+            url: '/api/couple',
+            type: 'post',
+            dataType: 'json',
+            data: JSON.stringify({
+              couple: newMembers
+            }),
+            contentType: 'application/json',
+            success: () => {
+              addMember(newMembers[0])
+              addMember(newMembers[1])
+
+              refresh()
+            }
+          })
+          break
+        case 1:
+          $.ajax({
+            url: '/api/member',
+            type: 'post',
+            dataType: 'json',
+            data: JSON.stringify({
+              member: newMembers[0]
+            }),
+            contentType: 'application/json',
+            success: () => {
+              addMember(newMembers[0])
+
+              refresh()
+            }
+          })
+          break
       }
-
-      validateButton.disabled = (newMembers.length < 1)
-
-      // Validate that we have at least 2 members
-      startButton.disabled = (members.length < 2)
     }
 
-    function validate() {
-      let newMembers = getNewMembers()
-
-      // Since a member cannot draw his/her spouse we push a couple as a single member
-      members.push(newMembers)
-
-      getElementById('newMember1').value = null
-      getElementById('newMember2').value = null
-      updateName()
-
-      // TODO: Plugin to the backend
-      getElementById('list').innerHTML += `${newMembers.join(' - ')}<br />`
+    function deleteReset() {
+      $.ajax({
+        url: '/api/reset',
+        type: 'delete',
+        contentType: 'application/json',
+        success: sync
+      })
     }
 
     function start() {
-      getElementById('newMember1').disabled = true
-      getElementById('newMember2').disabled = true
-      getElementById('start').disabled = true
+      $.ajax({
+        url: '/api/draw',
+        type: 'post',
+        contentType: 'application/json',
+        success: sync
+      })
     }
   </script>
 </head>
-<body onload="javascript: reset()">
-<h1>Christmas gift exchange</h1>
-<div id="list"></div>
-<div id="addNewMemberForm">
-  <input id="newMember1" type="text" value="" oninput="javascript: updateName()" />
-  -
-  <input id="newMember2"  type="text" value="" oninput="javascript: updateName()" />
-  <input id="validate" type="button" value="Add a member of the family" onclick="javascript: validate()" disabled />
+<body onload="javascript: initialize()">
+<div class="page-header">
+  <h1>Christmas gift exchange</h1>
 </div>
-<div id="startForm">
-  <input id="start" type="button" value="Start automated draw" onclick="javascript: start()" disabled />
+<div class="panel panel-info">
+  <div class="panel-heading">Member list</div>
+  <div class="panel-body">
+      <ul class="list-group" id="list">
+      </ul>
+  </div>
+  <div class="panel-footer">
+    <input id="newMember1" class="open-state" type="text" value="" placeholder="member" oninput="javascript: refresh()" />
+    <input id="newMember2" class="open-state" type="text" value="" placeholder="spouse" oninput="javascript: refresh()" />
+    <input id="postMembers" class="open-state" type="button" value="Add a member of the family" onclick="javascript: postMembers()" />
+    <input id="start" class="open-state" type="button" value="Start automated draw" onclick="javascript: start()" />
+    <input id="reset" type="button" value="Reset" onclick="javascript: deleteReset()" />
+  </div>
 </div>
 </body>
 </html>

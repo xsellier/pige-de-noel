@@ -26,7 +26,6 @@ describe(`${path.relative(process.cwd(), __filename)} during 'OPEN' state`, () =
     expect(machineStateModule.state.addCouple).to.exist
     expect(machineStateModule.state.addMember).to.exist
     expect(machineStateModule.state.removeMember).to.exist
-    expect(machineStateModule.state.listMembers).to.exist
     expect(machineStateModule.state.getMember).to.exist
     expect(machineStateModule.state.start).to.exist
 
@@ -56,7 +55,6 @@ describe(`${path.relative(process.cwd(), __filename)} during 'CLOSE' state`, () 
     expect(machineStateModule.state.addCouple).to.not.exist
     expect(machineStateModule.state.addMember).to.not.exist
     expect(machineStateModule.state.removeMember).to.not.exist
-    expect(machineStateModule.state.listMembers).to.not.exist
     expect(machineStateModule.state.getMember).to.not.exist
     expect(machineStateModule.state.start).to.not.exist
 
