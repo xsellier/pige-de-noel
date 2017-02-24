@@ -83,14 +83,14 @@ describe(`${path.relative(process.cwd(), __filename)} experiment`, () => {
 
   it('Should be able to perform a valid draw with 2 couples', (done) => {
     const couples = [
-      ['Julia Roberts', 'Robert Redford'],
-      ['Lara Dabian', 'Céline Dion']
+      ['a', 'aa'],
+      ['asd', 'dsa'],
+      ['sdf', 'fds']
     ]
 
     couples.forEach((couple) => familyModel.addCouple.apply(familyModel, couple))
 
     drawManagerModule(familyModel, matchModel)
-
     validateDraw([], couples)
 
     done()
