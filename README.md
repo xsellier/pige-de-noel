@@ -17,6 +17,10 @@ node .
 
 Then, load [http://127.0.0.1:8000](http://127.0.0.1:8000) in a browser to see the output
 
+### Maximum number of user is set to 50 by default
+
+To allow more than 50 users, edit the file `config/default.json` and replace the value of `maxMembers`
+
 ## Linting and testing
 
 Extract the attached archive named `pige-de-noel.zip`, then open a terminal.
@@ -26,4 +30,5 @@ cd pige-de-noel
 
 npm install 
 npm test
+npm run lint
 ```
