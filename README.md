@@ -34,14 +34,14 @@ npm run lint
 
 ```shell
 npm install
-npm test-unit
+npm run test-unit
 ```
 
 ### Integration tests
 
 ```shell
 npm install
-npm test
+npm run test-integration
 ```
 
 ### end-to-end tests (including UI)

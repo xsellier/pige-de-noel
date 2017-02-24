@@ -9,15 +9,18 @@
     "express": "^4.14.1"
   },
   "devDependencies": {
+    "async": "^2.1.5",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "node-uuid": "^1.4.7",
-    "standard": "^8.6.0"
+    "standard": "^8.6.0",
+    "supertest": "^3.0.0"
   },
   "scripts": {
     "lint": "standard lib/**/*.js",
-    "test": "mocha test/**/*.js",
-    "test-unit": "mocha test/unit/**/*.js"
+    "test": "mocha test/integration/**/*.js test/unit/**/*.js",
+    "test-unit": "mocha test/unit/**/*.js",
+    "test-integration": "mocha test/integration/**/*.js"
   },
   "repository": {
     "type": "git",
